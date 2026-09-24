@@ -1,13 +1,29 @@
-class Produto {
-    constructor({ id, nome, preco }) {
-        this.id = id;
-        this.nome = nome;
-        this.preco = preco;
-    }
+const { DataTypes } = require("sequelize");
+const sequelize = require("../config/database");
 
-    estaEmPromocao() {
-        return this.preco < 100;
+const Produto = sequelize.define(
+    "Produto",
+    {
+        id: {
+            type: DataTypes.INTEGER,
+            primaryKey: true,
+            autoIncrement: true
+        },
+
+        nome: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+
+        preco: {
+            type: DataTypes.FLOAT,
+            allowNull: false
+        }
+    },
+    {
+        tableName: "produtos",
+        timestamps: false
     }
-}
+);
 
 module.exports = Produto;

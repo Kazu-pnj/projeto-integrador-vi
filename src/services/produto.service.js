@@ -1,36 +1,46 @@
-const Produto = require("../models/produto.model")
+const ProdutoRepository = require("../repositories/produto.repository");
 
-const produtos = [
-    new Produto({ id: 1, nome: "Notebook", preco: 3500 }),
-    new Produto({ id: 2, nome: "Mouse", preco: 120 })
-];
+const repository = new ProdutoRepository();
 
-function listar() {
-    return produtos;
+async function listar() {
+    return await repository.listar();
 }
 
-function buscarPorId(id) {
-    return produtos.find(p => p.id === Number(id));
+async function buscarPorId(id) {
+    return await repository.buscarPorId(id);
 }
 
-function criar(dados) {
+async function criar(dados) {
     if (!dados.nome || dados.preco == null) {
         throw new Error("nome e preco são obrigatórios");
     }
 
-    const novoProduto = new Produto({
-        id: produtos.length + 1,
+    if (dados.preco < 0) {
+        throw new Error("preço não pode ser negativo");
+    }
+
+    return await repository.criar({
         nome: dados.nome,
         preco: dados.preco
     });
+}
 
-    produtos.push(produto);
+async function atualizar(id, dados) {
+    if (dados.preco != null && dados.preco < 0) {
+        throw new Error("preço não pode ser negativo");
+    }
 
-    return novoProduto;
+    return await repository.atualizar(id, dados);
+}
+
+async function excluir(id) {
+    return await repository.excluir(id);
 }
 
 module.exports = {
     listar,
     buscarPorId,
-    criar
+    criar,
+    atualizar,
+    excluir
 };
